@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class main {
+public class Main {
     public static void main(String[] args) throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");
