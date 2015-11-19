@@ -6,20 +6,25 @@ public class main {
             Class.forName("org.sqlite.JDBC");
 
             try(Connection connection = DriverManager.getConnection("jdbc:sqlite:devel.db");
-                Statement statement = connection.createStatement()
-            ) {
+                Statement statement = connection.createStatement()) {
                 DatabaseMetaData databaseMetaData = connection.getMetaData();
+                String dropTableQuery = "DROP TABLE Users";
+                String createTableQuery = "CREATE TABLE Users (" +
+                        "id INTEGER PRIMARY KEY ASC, " +
+                        "firstName CHAR(512), " +
+                        "lastName CHAR(512) " +
+                        ")";
                 boolean tableExists = false;
 
-                // Metadatos de conexion
                 try(ResultSet tableMetaData = databaseMetaData.getTables(null, null, "Users", null)) {
                     while (tableMetaData.next()) {
                         tableExists = tableMetaData.getString(3).contentEquals("Users");
                     }
                 }
-                // Tumbar tabla `Users`
+
                 if (tableExists) {
-                    statement.executeUpdate("DROP TABLE Users");
+                    statement.executeUpdate(dropTableQuery);
+                    statement.executeUpdate(createTableQuery);
                 }
             }
         } catch (ClassNotFoundException e) {
