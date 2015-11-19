@@ -10,10 +10,11 @@ public class Main {
                 DatabaseMetaData databaseMetaData = connection.getMetaData();
                 String dropTableQuery = "DROP TABLE Users";
                 String createTableQuery = "CREATE TABLE Users (" +
-                        "id INTEGER PRIMARY KEY ASC, " +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "firstName CHAR(512), " +
                         "lastName CHAR(512) " +
                         ")";
+                String insertTableQuery = "INSERT INTO Users('firstName', 'lastName') VALUES(?, ?)";
                 boolean tableExists = false;
 
                 try(ResultSet tableMetaData = databaseMetaData.getTables(null, null, "Users", null)) {
@@ -22,10 +23,17 @@ public class Main {
                     }
                 }
 
-                if (tableExists) {
+                if (tableExists)
                     statement.executeUpdate(dropTableQuery);
-                    statement.executeUpdate(createTableQuery);
-                }
+
+                statement.executeUpdate(createTableQuery);
+
+                PreparedStatement preparedStatement = connection.prepareStatement(insertTableQuery);
+                preparedStatement.setString(1, "Maylene");
+                preparedStatement.setString(2, "Wynter");
+
+                statement.executeUpdate(insertTableQuery);
+                statement.executeUpdate("INSERT INTO Users('firstName', 'lastName') VALUES('Zahir', 'Gudiño')");
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
